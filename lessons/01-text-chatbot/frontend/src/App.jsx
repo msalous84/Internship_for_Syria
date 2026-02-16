@@ -1,4 +1,6 @@
 import React, { useMemo, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const API_CHAT_STREAM = "/api/chat/stream";
 const API_HEALTH = "/health";
@@ -17,7 +19,7 @@ export default function App() {
       id: uid(),
       role: "assistant",
       content:
-        "Hi! Set a specialization (topic) on the left, then ask me something.\n\nTry: “Explain how a chatbot prompt works” or “Write a FastAPI endpoint that calls OpenAI.”",
+        "Hi! Set a specialization (topic) on the left, then ask me something.\n\nTry: **Explain how a chatbot prompt works** or **Write a FastAPI endpoint that calls OpenAI.**\n\n- Markdown is supported (bold, headers, lists, tables, code blocks).",
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
@@ -58,13 +60,12 @@ export default function App() {
     const assistantId = uid();
     const assistantMsg = { id: assistantId, role: "assistant", content: "" };
 
-    // Update UI immediately
     setMessages((prev) => [...prev, userMsg, assistantMsg]);
     setInput("");
     setIsLoading(true);
     setStreamingId(assistantId);
 
-    // Prepare payload messages (exclude the empty assistant placeholder)
+    // Use the current conversation + new user message (exclude placeholder assistant)
     const payloadMessages = [...messages, userMsg].map(({ role, content }) => ({ role, content }));
 
     const controller = new AbortController();
@@ -86,7 +87,6 @@ export default function App() {
         const t = await resp.text();
         throw new Error(t || `Request failed (${resp.status})`);
       }
-
       if (!resp.body) {
         throw new Error("Streaming not supported by the browser/response.");
       }
@@ -106,12 +106,8 @@ export default function App() {
       const latencyMs = Math.round(performance.now() - t0);
       setMeta((m) => ({ ...m, latencyMs }));
     } catch (e) {
-      if (e?.name === "AbortError") {
-        // If we add "Stop" later, this will be used.
-        setError("Request aborted.");
-      } else {
-        setError(e?.message || "Unknown error");
-      }
+      if (e?.name === "AbortError") setError("Request aborted.");
+      else setError(e?.message || "Unknown error");
     } finally {
       setIsLoading(false);
       setStreamingId(null);
@@ -121,7 +117,6 @@ export default function App() {
   }
 
   function clearChat() {
-    // If streaming, abort it
     try {
       abortRef.current?.abort();
     } catch {}
@@ -151,7 +146,7 @@ export default function App() {
         <div>
           <h1 className="title">Lesson 1 — Text Chatbot</h1>
           <p className="subtitle">
-            Streaming enabled (token-by-token).
+            Streaming enabled (token-by-token) + Markdown rendering.
             <br />
             <span style={{ color: "rgba(255,255,255,0.8)" }}>
               Send shortcut: <b>Ctrl</b>/<b>Cmd</b> + <b>Enter</b>
@@ -193,11 +188,11 @@ export default function App() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={onKeyDown}
-              placeholder='Try: “Explain message roles: developer vs user”'
+              placeholder='Try: “Give me a Markdown checklist”'
             />
             <div style={{ display: "flex", marginTop: 10, justifyContent: "space-between", gap: 12 }}>
               <span style={{ fontSize: 12, color: "var(--muted)" }}>
-                Streaming: text appears as it is generated.
+                Tip: Ask for a Markdown table or code block.
               </span>
               <button className={"btn primary"} disabled={!canSend} onClick={send}>
                 {isLoading ? "Streaming..." : "Send"}
@@ -213,10 +208,14 @@ export default function App() {
           <div className="messages">
             {messages.map((m) => (
               <div key={m.id} className={`bubble ${m.role}`}>
-                {m.content}
-                {isLoading && m.id === streamingId ? (
-                  <span style={{ color: "rgba(255,255,255,0.55)" }}>▍</span>
-                ) : null}
+                {m.role === "assistant" ? (
+                  <div className="md">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
+                  </div>
+                ) : (
+                  <span>{m.content}</span>
+                )}
+                {isLoading && m.id === streamingId ? <span className="cursor">▍</span> : null}
               </div>
             ))}
           </div>

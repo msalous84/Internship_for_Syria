@@ -88,3 +88,48 @@ input:focus, textarea:focus{ border-color: rgba(110,231,255,0.55); box-shadow: 0
   font-size: 13px;
   white-space: pre-wrap;
 }
+
+/* Markdown rendering inside assistant bubbles */
+.bubble .md :where(p, ul, ol, pre, blockquote, table, h1, h2, h3, h4, h5, h6){
+  margin: 0.5em 0;
+}
+.bubble .md :where(h1){ font-size: 1.12em; }
+.bubble .md :where(h2){ font-size: 1.08em; }
+.bubble .md :where(h3){ font-size: 1.04em; }
+.bubble .md :where(ul, ol){
+  padding-left: 1.2em;
+}
+.bubble .md :where(code){
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95em;
+}
+.bubble .md :where(pre){
+  padding: 10px 12px;
+  border-radius: 12px;
+  overflow: auto;
+  background: rgba(0,0,0,0.28);
+  border: 1px solid var(--border);
+}
+.bubble .md :where(pre code){
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.bubble .md :where(table){
+  width: 100%;
+  border-collapse: collapse;
+}
+.bubble .md :where(th, td){
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  vertical-align: top;
+}
+.bubble .md :where(blockquote){
+  padding-left: 10px;
+  border-left: 3px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.85);
+}
+.cursor{
+  margin-left: 2px;
+  color: rgba(255,255,255,0.55);
+}
