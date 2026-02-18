@@ -1,3 +1,3 @@
-# Lesson 4 — Integration And Models
+# Lesson 4 — Integration & Other Models
 
 Placeholder.
