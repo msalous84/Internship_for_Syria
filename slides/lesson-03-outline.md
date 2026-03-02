@@ -1,4 +1,3 @@
-````md
 # Lesson 3 — Voice-to-Voice + RAG (PDF) with OpenAI Realtime (WebRTC)
 
 **Goal:** After uploading a PDF, start a **live voice call** with an AI assistant that answers **only from the PDF** (RAG).  
@@ -245,8 +244,6 @@ Frontend: `frontend/src/App.jsx` → `handleUserTranscript()`
 **Show code (open):**
 `lessons/03-voice-chatbot/backend/app/main.py` → `_retrieve(doc, query, top_k)`
 
-(You can remind students: this is the same as Lesson 2, now reused for voice.)
-
 ---
 
 ## Grounded response.create (Voice)
@@ -348,6 +345,3 @@ Open:
 3. Ask Arabic question → show transcript + sources + answer
 4. Interrupt mid-answer → show the assistant stops
 5. Ask off-topic question → show refusal (PDF-only rule)
-
-```
-```
