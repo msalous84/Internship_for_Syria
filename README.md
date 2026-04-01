@@ -4,7 +4,7 @@ This repo is structured as a progression of lessons.
 
 - `lessons/01-text-chatbot/` ✅ Text chatbot (prompting + streaming + Markdown)
 - `lessons/02-rag-chatbot/` ✅ RAG chatbot (upload PDF → chunk → embed → retrieve sources)
-- `lessons/03-voice-chatbot/` placeholder (Lesson 3: voice)
+- `lessons/03-voice-chatbot/` ✅ voice
 - `lessons/04-integration-and-models/` placeholder (Lesson 4: integration + other models)
 
 ## Requirements
